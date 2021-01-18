@@ -1,62 +1,71 @@
-  import React, { Component } from "react";
-import Employees from "../Employees";
-import Search from "../Search";
-import getEmployees from "../../utils/API";
-import "./style.css";
+  import React, {
+      Component
+  } from "react";
+  import Employees from "../Employees";
+  import Search from "../Search";
+  import getEmployees from "../../utils/API";
+  import "./style.css";
 
-class Directory extends Component {
+  class Directory extends Component {
 
-    state = {
-      employees: [],
-      eeFiltered: [],
-      search: "",
-      isFiltered: false,
-      sortOrder: 1,
-    };
-  
-    componentDidMount() {
-      getEmployees().then(results => {
-        this.setState({
-          employees: results.data.results,
-          eeFiltered: results.data.results,
-        });
-      });
-    }
-  
-    // filter employees based on search term
-   
-    filterEmployees = event => {
-      this.setState({ search: event.target.value }, () => {
-        let { employees, search } = this.state;
-        let eeFiltered = employees.filter(filtered => {
-          return (
-            filtered.name.first.toLowerCase().includes(search.toLowerCase()) ||
-            filtered.name.last.toLowerCase().includes(search.toLowerCase())  
-            )
+      state = {
+          employees: [],
+          eeFiltered: [],
+          search: "",
+          isFiltered: false,
+          sortOrder: 1,
+      };
+
+      componentDidMount() {
+          getEmployees().then(results => {
+              this.setState({
+                  employees: results.data.results,
+                  eeFiltered: results.data.results,
+              });
+          });
+      }
+
+      // filter employees
+
+      filterEmployees = event => {
+          this.setState({
+              search: event.target.value
+          }, () => {
+              let {
+                  employees,
+                  search
+              } = this.state;
+              let eeFiltered = employees.filter(filtered => {
+                  return (
+                      filtered.name.first.toLowerCase().includes(search.toLowerCase()) ||
+                      filtered.name.last.toLowerCase().includes(search.toLowerCase())
+                  )
+              })
+              console.log(eeFiltered)
+              this.setState({
+                  eeFiltered
+              })
+          });
+      };
+
+      sortEmployees = event => {
+
+          // set sortOrder to determine if sort should be decending or acending, changes sign and direction each time invoked
+          let a1 = this.state.sortOrder;
+          let a2 = a1 * -1;
+          // sort objects based upon above criteria
+          let sortedEmployees = this.state.employees.sort((a, b) => (a.name.first > b.name.first) ? a2 : a1);
+          let sortedeeFiltered = this.state.eeFiltered.sort((a, b) => (a.name.first > b.name.first) ? a1 : a2);
+          console.log(sortedeeFiltered)
+          // update objects with new sort ordering 
+          this.setState({
+              employees: sortedEmployees,
+              eeFiltered: sortedeeFiltered,
+              sortOrder: a2
           })
-        console.log(eeFiltered)
-        this.setState({ eeFiltered })
-      });
-    };
-  
-    sortEmployees = event => {
-  
-  // set sortOrder to determine if sort should be decending or acending, changes sign and direction each time invoked
-         let a1 = this.state.sortOrder;
-          let a2 = a1*-1;
-  // sort objects based upon above criteria
-      let  sortedEmployees = this.state.employees.sort((a, b) => (a.name.first > b.name.first) ? a2: a1);
-      let  sortedeeFiltered  = this.state.eeFiltered.sort((a, b) => (a.name.first > b.name.first) ? a1: a2);
-      console.log(sortedeeFiltered)
-  // update objects with new sort ordering 
-      this.setState({
-        employees: sortedEmployees,
-        eeFiltered: sortedeeFiltered,
-        sortOrder: a2
-      })
-    }
-  
-  // render header and then table 
+      }
+
+      // render header and then table 
   
     render = () => {
       return (
@@ -66,11 +75,8 @@ class Directory extends Component {
             <h3 className="display-4">Employee Directory</h3>
             <br></br><br></br>
   
-  {/* Search component which initiaties filter function  */}
-  
       <Search name="search" startFilter={this.filterEmployees} label="Search" />
         
-  {/* render table header - with event listener on employee name */}
           </div>
           <br></br><br></br><br></br><br></br>
           <div className="container">
@@ -89,8 +95,7 @@ class Directory extends Component {
               <br></br> 
   
               <tbody>
-  
-    {/* render employee information within table body based upon filter criteria */}
+
                     {this.state.eeFiltered.map((employee) => (
                       <Employees
                         firstName={employee.name.first}
