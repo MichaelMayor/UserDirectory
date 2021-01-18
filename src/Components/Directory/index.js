@@ -1,7 +1,7 @@
   import React, { Component } from "react";
 import Employees from "../Employees";
 import Search from "../Search";
-import API from "../utils/API";
+import getEmployees from "../../utils/API";
 import "./style.css";
 
 class Directory extends Component {
@@ -15,7 +15,7 @@ class Directory extends Component {
     };
   
     componentDidMount() {
-      API.getEmployees().then(results => {
+      getEmployees().then(results => {
         this.setState({
           employees: results.data.results,
           eeFiltered: results.data.results,

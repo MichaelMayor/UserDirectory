@@ -1,12 +1,12 @@
 import React from "react";
-import "../styles/Employees.css";
-import Moment from "moment";
+import "./style.css";
+import Moment from "react-moment";
 
 const Employees = (props) => {
 
 // using Moment to format date from API response
 
-  let formattedDate = Moment(props.dob).format("LL");
+  let formattedDate = <Moment format="YYYY/MM/DD">{props.dob}</Moment>
 
 // returning employee info with first and last name concatenated together + formatted date
 
